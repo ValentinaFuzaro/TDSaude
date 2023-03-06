@@ -1,29 +1,65 @@
-# TDSa-de
+# TDSaude
 App de saúde voltado para o monitoramento das condições do cidadão.
 
 ## Endpoints
 - Documentos
-    - Listar todos
-    - Selecionar
-
+    - Cadastro Paciente
+    - Cadastro Médico   
+    - Listar exames
 ---
 
-### Buscar Um
-`GET` /inOne/api/docs/listOne
+### CadastrarPaciente
+`GET` /inOne/api/docs/cadastroPaciente
 
 | campo | tipo | obrigatório | descrição
 |-------|------|:-------------:|--
 | doc_num | string | sim | É o número de cadstro da pessoa física.
-| doc_name | string | sim | É o nome do documento.
-| permission | boolean | sim | Permissão para acesso aos dados.
+| doc_name | string | sim | É o nome completo no documento.
+| login | string | sim | Login de acesso.
+| senha | string | sim | Senha.
+
 
 **Exemplo de corpo do request**
 
 ```js
 {
     "doc_num" : "553.318.430-93",
-    "doc_name": "CPF",
-    "permission": X,
+    "doc_name": "Ana Karol",
+    "login": "AnaKarol",
+    "senha": "eusou@Alun4"
+    
+}
+```
+
+**Códigos de Exceção**
+
+| código | descrição 
+|-|-
+| 201 | Cadastrado com sucesso
+| 400 | Erro de cadastro
+
+---
+
+### CadastrarMédico
+`GET` /inOne/api/docs/cadastroMedico
+
+| campo | tipo | obrigatório | descrição
+|-------|------|:-------------:|--
+| doc_crm | string | sim | É o número do registro no Conselho Federal de Medicina.
+| doc_name | string | sim | É o nome completo no documento.
+| login | string | sim | Login de acesso.
+| senha | string | sim | Senha.
+
+
+**Exemplo de corpo do request**
+
+```js
+{
+    "doc_crm" : "123456",
+    "doc_name": "Valentina Fuzzaro",
+    "login": "MedValentina",
+    "senha": "eusou@Medic4"
+    
 }
 ```
 
@@ -36,16 +72,19 @@ App de saúde voltado para o monitoramento das condições do cidadão.
 
 ---
 ### Buscar Todos
-`GET` /inOne/api/docs
+`GET` /inOne/api/docs/getFields
+
+| campo | tipo | obrigatório | descrição
+|-------|------|:-------------:|--
+| doc_crm | string | sim |  É o número de cadstro da pessoa física.
+| permission | boolean | sim | Indica se a pessoa tem permissão para acessar os documentos ou não.
 
 **Exemplo de corpo da resposta**
 
 ```js
 {
-    "doc_num": 446.283.557,
-    "doc_digit": x,
-    "doc_name": "RG",
-    "doc_body": "assets/image/user/cats/doc/rg.pdf"
+    "doc_crm": 446.283.557,
+    "permission": X,
 }
 ```
 
