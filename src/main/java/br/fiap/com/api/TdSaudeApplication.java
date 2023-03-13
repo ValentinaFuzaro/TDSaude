@@ -10,4 +10,5 @@ public class TdSaudeApplication {
 		SpringApplication.run(TdSaudeApplication.class, args);
 	}
 
+	
 }
