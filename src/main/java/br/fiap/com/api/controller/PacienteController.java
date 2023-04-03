@@ -6,12 +6,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.fiap.com.api.models.Paciente;
+import br.fiap.com.api.repository.PacienteRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,29 +25,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("api/paciente")
 public class PacienteController {
 
     Logger log = LoggerFactory.getLogger(PacienteController.class);
 
-    List<Pacientes> pacientes = new ArrayList<>();
+    List<Paciente> pacientes = new ArrayList<>();
 
-    @GetMapping("api/pacientes")
-    public List<Pacientes> index() {
-        return pacientes;
+    @Autowired
+    PacienteRepository repository;
+
+    @GetMapping
+    public List<Paciente> index() {
+        return repository.findAll();
     }
 
-    @PostMapping("api/pacientes")
-    public ResponseEntity<Pacientes> create(@RequestBody Pacientes paciente) {
+    @PostMapping
+    public ResponseEntity<Paciente> create(@RequestBody Paciente paciente) {
         log.info("cadastrando paciente: " + paciente);
-        paciente.setDoc_id(pacientes.size() + 1l);
-        pacientes.add(paciente);
+        
+        repository.save(paciente);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(paciente);
     }
 
-    @GetMapping("api/pacientes/{id}")
-    public ResponseEntity<Pacientes> show(@PathVariable Long id) {
+    @GetMapping("{id}")
+    public ResponseEntity<Paciente> show(@PathVariable Long id) {
         log.info("buscando paciente com id " + id);
-        var pacienteSelecionado = pacientes.stream().filter(d -> d.getDoc_id().equals(id)).findFirst();
+        var pacienteSelecionado = repository.findById(id);
 
         if (pacienteSelecionado.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -54,31 +61,31 @@ public class PacienteController {
 
     }
 
-    @DeleteMapping("api/pacientes/{id}")
-    public ResponseEntity<Pacientes> destroy(@PathVariable Long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Paciente> destroy(@PathVariable Long id) {
         log.info("apagando paciente com id " + id);
-        var pacienteSelecionado = pacientes.stream().filter(d -> d.getDoc_id().equals(id)).findFirst();
+        var pacienteSelecionado = repository.findById(id);
 
         if (pacienteSelecionado.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        pacientes.remove(pacienteSelecionado.get());
+        repository.delete(pacienteSelecionado.get());
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 
-    @PutMapping("api/pacientes/{id}")
-    public ResponseEntity<Pacientes> update(@PathVariable Long id, @RequestBody Pacientes paciente) {
+    @PutMapping("{id}")
+    public ResponseEntity<Paciente> update(@PathVariable Long id, @RequestBody Paciente paciente) {
         log.info("alterando informações do pacientes de id " + id);
-        var pacienteSelecionado = pacientes.stream().filter(d -> d.getDoc_id().equals(id)).findFirst();
+        var pacienteSelecionado = repository.findById(id);
 
         if (pacienteSelecionado.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        pacientes.remove(pacienteSelecionado.get());
-        paciente.setDoc_id(id);
-        pacientes.add(paciente);
+        paciente.setId(id);
+
+        repository.save(paciente);
 
         return ResponseEntity.ok(paciente);
 
