@@ -4,10 +4,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
 
 import br.fiap.com.api.models.Exames;
 import br.fiap.com.api.repository.ExamesRepository;
+import br.fiap.com.api.exception.RestNotFoundException;
+import jakarta.validation.Valid;
 
+
+import java.security.cert.CertPathValidatorException.Reason;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +48,7 @@ public class ExamesController {
     }
 
     @PostMapping
-    public ResponseEntity<Exames> create(@RequestBody Exames exames) {
+    public ResponseEntity<Exames> create(@RequestBody @Valid Exames exames) {
         log.info("cadastrando exame: " + exames);
      
         repository.save(exames);
@@ -53,24 +59,24 @@ public class ExamesController {
     @GetMapping("{id}")
     public ResponseEntity<Exames> show(@PathVariable Long id) {
         log.info("buscando exame com id " + id);
-        var exameSelecionado = repository.findById(id);
 
-        if (exameSelecionado.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        var exame = repository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Exame não encontrado"));
 
-        return ResponseEntity.ok(exameSelecionado.get());
+        
+
+        return ResponseEntity.ok(exame);
 
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Exames> destroy(@PathVariable Long id) {
         log.info("apagando exame com id " + id);
-        var exameSelecionado = repository.findById(id);
 
-        if (exameSelecionado.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        var exame = repository.findById(id)
+            .orElseThrow(() -> new RestNotFoundException("Exame não encontrado"));
 
-        repository.delete(exameSelecionado.get());
+        repository.delete(exame);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
@@ -79,12 +85,11 @@ public class ExamesController {
     @PutMapping("{id}")
     public ResponseEntity<Exames> update(@PathVariable Long id, @RequestBody Exames exame) {
         log.info("alterando exame de id " + id);
-        var exameSelecionado = repository.findById(id);
 
-        if (exameSelecionado.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        repository.findById(id)
+            .orElseThrow(() -> new RestNotFoundException("Exame não encontrado"));
 
-        ((Exames) exames).setId(id);
+        exame.setId(id);
 
         repository.saveAll(exames);
         

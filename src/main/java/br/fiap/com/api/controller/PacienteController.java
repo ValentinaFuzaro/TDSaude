@@ -4,10 +4,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
 
 import br.fiap.com.api.models.Paciente;
 import br.fiap.com.api.repository.PacienteRepository;
+import br.fiap.com.api.exception.RestNotFoundException;
+import jakarta.validation.Valid;
 
+import java.security.cert.CertPathValidatorException.Reason;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +46,7 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> create(@RequestBody Paciente paciente) {
+    public ResponseEntity<Paciente> create(@RequestBody @Valid Paciente paciente) {
         log.info("cadastrando paciente: " + paciente);
         
         repository.save(paciente);
@@ -52,24 +57,22 @@ public class PacienteController {
     @GetMapping("{id}")
     public ResponseEntity<Paciente> show(@PathVariable Long id) {
         log.info("buscando paciente com id " + id);
-        var pacienteSelecionado = repository.findById(id);
 
-        if (pacienteSelecionado.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        var paciente = repository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Paciente não encontrado"));
 
-        return ResponseEntity.ok(pacienteSelecionado.get());
+        return ResponseEntity.ok(paciente);
 
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Paciente> destroy(@PathVariable Long id) {
         log.info("apagando paciente com id " + id);
-        var pacienteSelecionado = repository.findById(id);
+       
+        var paciente = repository.findById(id)
+            .orElseThrow(() -> new RestNotFoundException("Paciente não encontrado"));
 
-        if (pacienteSelecionado.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
-        repository.delete(pacienteSelecionado.get());
+        repository.delete(paciente);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
@@ -79,16 +82,17 @@ public class PacienteController {
     public ResponseEntity<Paciente> update(@PathVariable Long id, @RequestBody Paciente paciente) {
         log.info("alterando informações do pacientes de id " + id);
         var pacienteSelecionado = repository.findById(id);
-
-        if (pacienteSelecionado.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+   
+        repository.findById(id)
+            .orElseThrow(() -> new RestNotFoundException("Paciente não encontrado"));
 
         paciente.setId(id);
 
-        repository.save(paciente);
-
+        repository.saveAll(pacientes);
+        
         return ResponseEntity.ok(paciente);
 
     }
+
 
 }
