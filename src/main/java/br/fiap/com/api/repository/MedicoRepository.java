@@ -5,7 +5,5 @@ import br.fiap.com.api.models.Medico;
 
 
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
-
-
-    
+    Page<Medico> findByNameContaining(String med, Pageable pageable);
 }
