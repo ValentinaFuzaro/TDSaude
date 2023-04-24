@@ -45,6 +45,12 @@ public class PacienteController {
         return repository.findAll();
     }
 
+    @GetMapping
+    public ResponseEntity<Paciente> index(@RequestParam(required = false) String publico, @PageableDefault(size = 5) Pageable pageable){
+        if (publico == null) return repository.findAll(pageable);
+        return repository.findByDocsContaining(publico, pageable);
+    }
+
     @PostMapping
     public ResponseEntity<Paciente> create(@RequestBody @Valid Paciente paciente) {
         log.info("cadastrando paciente: " + paciente);

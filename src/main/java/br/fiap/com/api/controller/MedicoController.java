@@ -44,22 +44,24 @@ Logger log = LoggerFactory.getLogger(MedicoController.class);
         return repository.findAll();
     }
 
+    @GetMapping
+    public ResponseEntity<Medico> index(@RequestParam(required = false) String med, @PageableDefault(size = 5) Pageable pageable){
+        if (med == null) return repository.findAll(pageable);
+        return repository.findByDocsContaining(med, pageable);
+    }
+
     @PostMapping
     public ResponseEntity<Medico> create(@RequestBody @Valid Medico medico) {
         log.info("cadastrando medico: " + medico);
-
         repository.save(medico);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(medico);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Medico> show(@PathVariable Long id) {
         log.info("buscando medico com id " + id);
-
         var medico = repository.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Médico não encontrado"));
-
         return ResponseEntity.ok(medico);
 
     }

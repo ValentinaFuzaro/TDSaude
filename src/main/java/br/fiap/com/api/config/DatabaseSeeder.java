@@ -21,12 +21,8 @@ import br.fiap.com.api.repository.PacienteRepository;
 public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
-    ExamesRepository examesRepository;
-
-    @Autowired
-    MedicoRepository medicoRepository;
-
-    @Autowired
+    ExamesRepository   examesRepository;
+    MedicoRepository   medicoRepository;
     PacienteRepository pacienteRepository;
 
     @Override

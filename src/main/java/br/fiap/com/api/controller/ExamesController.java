@@ -39,60 +39,56 @@ public class ExamesController {
     List<Exames> exames = new ArrayList<>();
 
     @Autowired
-    ExamesRepository repository;
+    ExamesRepository examesRepository;
 
     @GetMapping("api/exames")
         public List<Exames> index() {
         return repository.findAll();
+    }
 
+    @GetMapping
+    public ResponseEntity<Exames> index(@RequestParam(required = false) String name, @PageableDefault(size = 5) Pageable pageable){
+        if (name == null) return examesRepository.findAll(pageable);
+        return examesRepository.findByDocsContaining(name, pageable);
     }
 
     @PostMapping
     public ResponseEntity<Exames> create(@RequestBody @Valid Exames exames) {
         log.info("cadastrando exame: " + exames);
-     
-        repository.save(exames);
-
+        examesRepository.save(exames);
         return ResponseEntity.status(HttpStatus.CREATED).body(exames);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Exames> show(@PathVariable Long id) {
-        log.info("buscando exame com id " + id);
+    public ResponseEntity<Exames> mostrarDetalhe(@PathVariable Long id) {
+        log.info("Buscando exame com id " + id);
+        var exameEncontrado = Examesrepository.findById(id)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Exame não encontrado"));
 
-        var exame = repository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Exame não encontrado"));
+            ExamesResourceAssembler assembler = new ExamesResourceAssembler();
+            Resource<Exames> resource = assembler.toResource(exameEncontrado);
 
-        
-
-        return ResponseEntity.ok(exame);
+        //return ResponseEntity.ok(exame);    
 
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Exames> destroy(@PathVariable Long id) {
-        log.info("apagando exame com id " + id);
-
-        var exame = repository.findById(id)
-            .orElseThrow(() -> new RestNotFoundException("Exame não encontrado"));
-
-        repository.delete(exame);
-
+        log.info("Apagando exame com id " + id);
+        var exameEncontrado = examesRepository.findById(id)
+                            .orElseThrow(() -> new RestNotFoundException("Exame não encontrado"));
+            examesRepository.delete(exameEncontrado);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Exames> update(@PathVariable Long id, @RequestBody Exames exame) {
-        log.info("alterando exame de id " + id);
-
-        repository.findById(id)
-            .orElseThrow(() -> new RestNotFoundException("Exame não encontrado"));
-
+    public ResponseEntity<Exames> update(@PathVariable Long id, @RequestBody @Valid Exames exame) {
+        log.info("Alterando exame de id " + id);
+        examesRepository.findById(id)
+                            .orElseThrow(() -> new RestNotFoundException("Exame não encontrado"));
         exame.setId(id);
-
-        repository.saveAll(exames);
-        
+        examesRepository.save(exames);
         return ResponseEntity.ok(exame);
 
     }
