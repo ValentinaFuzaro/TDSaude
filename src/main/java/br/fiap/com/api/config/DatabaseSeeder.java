@@ -1,10 +1,8 @@
-/*package br.fiap.com.api.config;
+package br.fiap.com.api.config;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,12 +26,12 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         examesRepository.saveAll(List.of(
-            new Exames(1L, "Exame de Sangue", "81341359000", "108805-SP", "X"),
-            new Exames(2L, "Exame de Sangue", "81341359000", "16865-SP", "X"),
-            new Exames(3L, "Tomografia", "11085807002", "16865-SP", "X"),
-            new Exames(4L, "Raio-X", "56267824004", "24427-DF", "X")
+            new Exames(1L, "Exame de Sangue", "81341359000", "108805-SP", true),
+            new Exames(2L, "Exame de Sangue", "81341359000", "16865-SP", true),
+            new Exames(3L, "Tomografia", "11085807002", "16865-SP", false),
+            new Exames(4L, "Raio-X", "56267824004", "24427-DF", true)
         ));
-
+        
         medicoRepository.saveAll(List.of(
             new Medico(1L, "108805-SP", "Adele Christina Manso Marques", "Adele108805", "******"),
             new Medico(2L, "16865-SP", "Ademar Sikara Tanaka", "Ademar16865", "******"),
@@ -49,4 +47,4 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
     
 }
-*/
+
