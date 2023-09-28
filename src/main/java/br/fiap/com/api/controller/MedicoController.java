@@ -2,7 +2,6 @@ package br.fiap.com.api.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -11,7 +10,6 @@ import br.fiap.com.api.repository.MedicoRepository;
 import br.fiap.com.api.exception.RestNotFoundException;
 import jakarta.validation.Valid;
 
-import java.security.cert.CertPathValidatorException.Reason;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping()
@@ -42,12 +38,6 @@ Logger log = LoggerFactory.getLogger(MedicoController.class);
     @GetMapping
     public List<Medico> index() {
         return repository.findAll();
-    }
-
-    @GetMapping
-    public ResponseEntity<Medico> index(@RequestParam(required = false) String med, @PageableDefault(size = 5) Pageable pageable){
-        if (med == null) return repository.findAll(pageable);
-        return repository.findByDocsContaining(med, pageable);
     }
 
     @PostMapping

@@ -1,10 +1,7 @@
-package br.fiap.com.api.models.assembler;
+/*package br.fiap.com.api.models.assembler;
 
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
-
-import br.com.fiap.TdSaudeApplication.controllers.ExamesController;
-import br.com.fiap.TdSaudeApplication.models.Exames;
 
 @Component
 public class ExamesResourceAssembler implements ResourceAssembler<Exames, Resource<Exames>> {
@@ -19,3 +16,4 @@ public class ExamesResourceAssembler implements ResourceAssembler<Exames, Resour
         return resource;
     }
 }
+*/

@@ -5,5 +5,4 @@ import br.fiap.com.api.models.Paciente;
 
 
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
-    Page<Paciente> findByNameContaining(String publico, Pageable pageable);
 }

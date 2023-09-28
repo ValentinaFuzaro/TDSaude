@@ -1,4 +1,4 @@
-package in.one.in_one.config;
+package br.fiap.com.api.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import in.one.in_one.models.RestValidationError;
+import br.fiap.com.api.models.RestValidationError;
+
 
 @RestControllerAdvice
 public class RestExceptionHandler {

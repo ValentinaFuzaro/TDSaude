@@ -1,4 +1,4 @@
-package br.fiap.com.api.config;
+/*package br.fiap.com.api.config;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,3 +49,4 @@ public class DatabaseSeeder implements CommandLineRunner {
     }
     
 }
+*/
