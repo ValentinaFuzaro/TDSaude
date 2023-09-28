@@ -20,7 +20,11 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
     ExamesRepository   examesRepository;
+
+    @Autowired
     MedicoRepository   medicoRepository;
+    
+    @Autowired
     PacienteRepository pacienteRepository;
 
     @Override

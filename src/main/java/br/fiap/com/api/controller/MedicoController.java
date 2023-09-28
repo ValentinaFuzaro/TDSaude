@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/api/medico")
 public class MedicoController {
 
 Logger log = LoggerFactory.getLogger(MedicoController.class);
